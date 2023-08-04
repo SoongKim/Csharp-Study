@@ -1,0 +1,8 @@
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\bin\Debug\LottoCalc.exe.config
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\bin\Debug\LottoCalc.exe
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\bin\Debug\LottoCalc.pdb
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\obj\Debug\LottoCalc.csproj.AssemblyReference.cache
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\obj\Debug\LottoCalc.csproj.SuggestedBindingRedirects.cache
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\obj\Debug\LottoCalc.csproj.CoreCompileInputs.cache
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\obj\Debug\LottoCalc.exe
+E:\C##\Project\Lotto\LottoCalc\LottoCalc\obj\Debug\LottoCalc.pdb
