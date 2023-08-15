@@ -21,7 +21,7 @@ namespace Chapter08.Service
                           "Initial Catalog={2};" +
                           "User ID={3};" +
                           "Password={4}",
-                          "127.0.0.1", 1433, "testdb2", "sa", "kj920412");
+                          "", , "", "", "");
         public void Run()
         {
             CheckDirectory();

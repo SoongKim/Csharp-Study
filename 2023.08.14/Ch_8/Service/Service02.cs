@@ -11,7 +11,7 @@ namespace Chapter08.Service
     {
         private readonly string connectStr =
             string.Format("Data Source={0},{1}; Initial Catalog={2}; User ID={3}; Password={4}",
-                "127.0.0.1", 1433, "testdb2", "sa", "kj920412");
+                "", , "", "", "");
         public void Run()
         {
             Console.WriteLine("참조 테이블 명을 입력해주세요,");
