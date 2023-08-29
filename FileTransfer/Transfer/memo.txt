@@ -1,0 +1,5 @@
+/* 실행 파일 경로 : Transfer\Transfer\Transfer\bin\Release\net7.0-windows/Transfer.exe
+ * Default IP : localhost
+ * Default Port : 7251
+ * Default Download Location : C:/Users/${UserName}/Desktop/uploads
+ */
