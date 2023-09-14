@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Models;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace Project.Controllers
 {
@@ -15,12 +16,9 @@ namespace Project.Controllers
         [HttpPost("SelectQuery")]
         public async Task<IActionResult> SelectQuery(string fullQuery) /* Host/api/main/query 에서 도출한 fullQuery를 매개 변수로 진행 */
         {
-            DBconnectModel dbm = new DBconnectModel();
             try
             {
-                /* DBConnectModel로부터 접속 정보를 확보, 이후 해당 정보로 DB Connection 확립 */
-                string connStr = string.Format("server={0};user={1};database={2};port={3};password={4}",
-                dbm.Ip, dbm.Username, dbm.dbName, dbm.Port, dbm.userPassword);
+                string connStr = Environment.GetEnvironmentVariable("DB_CONNECTION_INFO");
                 using (MySqlConnection connection = new MySqlConnection(connStr))
                 {
                     await connection.OpenAsync();
@@ -56,11 +54,9 @@ namespace Project.Controllers
         [HttpPost("UpdateInsertDelete")]
         public async Task<IActionResult> UpdateInsertDeleteQuery(string fullQuery)
         {
-            DBconnectModel dbm = new DBconnectModel();
             try
             {
-                string connStr = string.Format("server={0};user={1};database={2};port={3};password={4}",
-                dbm.Ip, dbm.Username, dbm.dbName, dbm.Port, dbm.userPassword);
+                string connStr = Environment.GetEnvironmentVariable("DB_CONNECTION_INFO");
                 using (MySqlConnection connection = new MySqlConnection(connStr))
                 {
                     await connection.OpenAsync();
