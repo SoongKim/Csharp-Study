@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using Project.Controllers;
 using Project.Models;
 
@@ -27,6 +29,7 @@ namespace Project.Services
         public async Task<IActionResult> Insert(QueryModel querymodel)
         {
             string fullQuery = "";
+            
             if (querymodel.dataSecond.Contains(","))
             {
                 string[] colArr = querymodel.dataSecond.Split(", ");
@@ -108,10 +111,27 @@ namespace Project.Services
         public async Task<IActionResult> Delete(QueryModel querymodel)
         {
             MainController maincontroller = new MainController();
-            string fullQuery = string.Format("{0} FROM {1} WHERE {2};", querymodel.queryType, querymodel.dataFirst, querymodel.dataSecond);
-            return await maincontroller.toDBcontroller(fullQuery);
+                string fullQuery = string.Format("{0} FROM {1} WHERE {2};", querymodel.queryType, querymodel.dataFirst, querymodel.dataSecond);
+                return await maincontroller.toDBcontroller(fullQuery);
         }
         #endregion
-        
+
+        public string SqlInjectionChecking(string condition)
+        {
+            string checkingString = condition.ToUpper().Replace(" ", "").Replace("(", "").Replace(")", "");
+            if (checkingString.Contains("OR"))
+            {
+                string[] sqlArray = checkingString.Split("OR");
+                for (int i = 1; i < sqlArray.Length; i++)
+                {
+                    string[] checkArray = sqlArray[i].Split("=");
+                    if (checkArray[0].Equals(checkArray[1]))
+                    {
+                        return "CODE001";
+                    }
+                }
+            }
+            return "CODE002";
+        }
     }
 }
