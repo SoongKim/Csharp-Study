@@ -5,19 +5,18 @@ using Project.Models;
 using System;
 using System.Globalization;
 using Project.Services;
+using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Logging;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
+
 namespace Project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class MainController : ControllerBase
     {
-        [HttpPost("string")]
-        public async Task<IActionResult> stringResponse([FromBody] Hello hello)
-        {
-            return Ok(hello.mrString);
-        }
-        
-        
+
         #region INSERT(Normal), SELECT, UPDATE
         [HttpPost("query")]
         public async Task<IActionResult> TargetQuery([FromBody] QueryModel jsonQueryModel)
@@ -36,11 +35,33 @@ namespace Project.Controllers
                             return BadRequest("SQL INJECTION 공격이 감지되었습니다.");
                         }
                     }
+                    
                     var result = await queryservices.Select(jsonQueryModel);
                     /* result 내 Value 값만을 정제하여 return */
                     if (result is OkObjectResult okResult)
                     {
+                        dbWork dbwork = new dbWork();
+                        string? logUser = null;
+                        if(jsonQueryModel.dataThird != null)
+                        {
+                            logUser = jsonQueryModel.dataThird.Replace("'", "").Replace(" ", "").Split("=")[1];
+                        }
+                        else
+                        {
+                            logUser = null;
+                        }
+                        string userType = jsonQueryModel.dataFifth;
+                        string queryType = jsonQueryModel.queryType.ToUpper();
+                        var logResult = await dbwork.LogSession(logUser, queryType, userType);
+                        
+                        if(logResult is BadRequestObjectResult badRequestObject)
+                        {
+                            return Ok(badRequestObject.Value);
+                        }
+                        else
+                        {
                         return Ok(okResult.Value);
+                        }
                     }
                     else
                     {
@@ -58,7 +79,13 @@ namespace Project.Controllers
                             return BadRequest("SQL INJECTION 공격이 감지되었습니다.");
                         }
                     }
+                    
                     var result = await queryservices.Update(jsonQueryModel);
+                    dbWork dbwork = new dbWork();
+                    string logUser = jsonQueryModel.dataFourth.Replace("'", "").Replace(" ", "").Split("=")[1];
+                    string userType = jsonQueryModel.dataFifth;
+                    string queryType = jsonQueryModel.queryType.ToUpper();
+                    var logResult = dbwork.LogSession(logUser, queryType, userType);
                     /* Json 내 Value값이 필요한 경우가 아니므로 return result;로 간략화 */
                     return result;
                 }
@@ -93,7 +120,8 @@ namespace Project.Controllers
                 }
 
             }
-            catch(Exception ex){
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
                 /* 어떤 오류가 발생하였는지 에러 코드 + 어떤 부분이 잘못되었는지 에러 코드 뱉도록 */
             }
@@ -114,10 +142,7 @@ namespace Project.Controllers
             {
                 return BadRequest("성별 항목에 적합하지 못한 값이 입력되었습니다.");
             }
-            if (uiM.role_id.Equals("0"))
-            {
-                return BadRequest("신규 관리자 생성은 DataBase에서 수행하여주시기 바랍니다.");
-            }
+
             #endregion
 
             //return Ok("Good1");
@@ -138,7 +163,7 @@ namespace Project.Controllers
 
             //return Ok("Good3");
 
-            string fullQuery = string.Format("INSERT INTO user_id (user_id, password, email, name, gender, birthday, phone, role_id) VALUES ({0});", fullTarget);
+            string fullQuery = string.Format("INSERT INTO member (user_id, password, email, name, gender, birthday, phone, role_id) VALUES ({0});", fullTarget);
 
             //return Ok(fullQuery);
 

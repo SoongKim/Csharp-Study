@@ -2,6 +2,6 @@
 {
     public class Hello
     {
-        public string mrString { get; set; }
+        public string user_id { get; set; }
     }
 }

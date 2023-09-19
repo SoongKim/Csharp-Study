@@ -12,7 +12,7 @@ namespace Project.Services
         public async Task<IActionResult> Select(QueryModel queryModel)
         {
             string fullQuery;
-            if (queryModel.dataThird == null)
+            if (queryModel.dataThird ==null)
             {
                 fullQuery = string.Format("{0} {1} FROM {2};", queryModel.queryType, queryModel.dataFirst, queryModel.dataSecond);
             }
